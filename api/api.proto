@@ -1,0 +1,40 @@
+syntax = "proto3";
+package api;
+
+import "google/api/annotations.proto";
+
+message DiskStatus {
+    string diskstat = 1;
+}
+message CpuStatus {
+    string cpustat = 1;
+}
+message RamStatus {
+    string ramstat = 1;
+}
+message NetStatus {
+    string netstat = 1;
+}
+
+service InfoStatus {
+    rpc GetDiskStats(DiskStatus) returns (DiskStatus) {
+        option (google.api.http) = {
+            get: "/disk"
+        };
+    }
+    rpc GetCpuStats(CpuStatus) returns (CpuStatus) {
+        option (google.api.http) = {
+            get: "/cpu"
+        };
+    }
+    rpc GetRamStats(RamStatus) returns (RamStatus) {
+        option (google.api.http) = {
+            get: "/ram"
+        };
+    }
+    rpc GetNetStats(NetStatus) returns (NetStatus) {
+        option (google.api.http) = {
+            get: "/net"
+        };
+    }
+}
