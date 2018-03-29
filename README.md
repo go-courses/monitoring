@@ -4,6 +4,8 @@ Instruction to install and run
 - Тянем библиотеку grpc-gateway и навсяк библиотеку swagger grpc:
     go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
     go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+
+- Еще тянем вот это: go get github.com/c9s/goprocinfo/linux
 - И в нашей папке запустим:
     make all
 
