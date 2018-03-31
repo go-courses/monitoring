@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"log"
-	"monitoring/api"
+
+	"github.com/go-courses/monitoring/api"
 
 	"google.golang.org/grpc"
 )
