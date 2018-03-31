@@ -26,10 +26,10 @@ api/api.pb.gw.go:
 api: api/api.pb.go api/api.pb.gw.go
 
 server:
-	GOOS=darwin go build -i -v -o $(SERVER_OUT) $(SERVER_PKG_BUILD)
+	go build -i -v -o $(SERVER_OUT) $(SERVER_PKG_BUILD)
 
 client:
-	GOOS=darwin go build -i -v -o $(CLIENT_OUT) $(CLIENT_PKG_BUILD)
+	go build -i -v -o $(CLIENT_OUT) $(CLIENT_PKG_BUILD)
 
 clean:
 	rm $(SERVER_OUT) $(CLIENT_OUT) $(API_OUT) $(API_REST_OUT)

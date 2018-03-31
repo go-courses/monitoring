@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"monitoring/api"
+	"github.com/go-courses/monitoring/api"
 	"net"
 	"net/http"
 
