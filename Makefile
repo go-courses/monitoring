@@ -8,7 +8,7 @@ GOPATH=$(shell go env GOPATH)
 
 .PHONY: all api server client
 
-all: clean api server client
+all: api server
 
 api/api.pb.go: 
 	protoc -I/usr/local/include -I api/ \
