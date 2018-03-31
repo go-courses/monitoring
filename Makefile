@@ -1,4 +1,5 @@
 SERVER_OUT := "bin/server"
+SERVER_OUT_W := "bin/server.exe"
 CLIENT_OUT := "bin/client"
 API_OUT := "api/api.pb.go"
 API_REST_OUT := "api/api.pb.gw.go"
@@ -7,8 +8,6 @@ CLIENT_PKG_BUILD := "client/main.go"
 GOPATH=$(shell go env GOPATH)
 
 .PHONY: all api server client
-
-all: clean api server client
 
 api/api.pb.go: 
 	protoc -I/usr/local/include -I api/ \
@@ -34,3 +33,12 @@ client:
 
 clean:
 	rm $(SERVER_OUT) $(CLIENT_OUT) $(API_OUT) $(API_REST_OUT)
+
+server_darwin:
+	GOOS=darwin go build -i -v -o $(SERVER_OUT) $(SERVER_PKG_BUILD)
+
+client_darwin:
+	GOOS=darwin go build -i -v -o $(CLIENT_OUT) $(CLIENT_PKG_BUILD)
+
+server_windows:
+	GOOS=windows go build -i -v -o $(SERVER_OUT_W) $(SERVER_PKG_BUILD)

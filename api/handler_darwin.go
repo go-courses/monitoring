@@ -6,7 +6,10 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/mem"
+	"github.com/shirou/gopsutil/net"
 	"golang.org/x/net/context"
 )
 
@@ -16,15 +19,13 @@ type Server struct{}
 // GetDiskStats generates responce to a Ping request
 func (s *Server) GetDiskStats(ctx context.Context, in *DiskStatus) (*DiskStatus, error) {
 	log.Printf("Recieve message DISK %s", in.Diskstat)
-	stat, err := disk.Usage()
+	stat, err := disk.Usage("/")
 	if err != nil {
 		log.Fatal("stat read fail")
 	}
 	var status string
 
-	for _, s := range stat {
-		status = "Name: " + s.Name + " | ReadIOs: " + strconv.FormatUint(s.ReadIOs, 10) + " | ReadSectors: " + strconv.FormatUint(s.ReadSectors, 10) + " | WriteIOs: " + strconv.FormatUint(s.WriteIOs, 10) + " | WriteSectors: " + strconv.FormatUint(s.WriteSectors, 10)
-	}
+	status = " Total: " + strconv.FormatUint(stat.Total, 10) + " | Free: " + strconv.FormatUint(stat.Free, 10) + " | Used: " + strconv.FormatUint(stat.Used, 10)
 	return &DiskStatus{Diskstat: status}, nil
 }
 
@@ -37,8 +38,8 @@ func (s *Server) GetCpuStats(ctx context.Context, in *CpuStatus) (*CpuStatus, er
 	}
 	var cpustatus string
 
-	for _, s := range stat.CPUStats {
-		cpustatus = "User: " + strconv.FormatUint(s.User, 10) + " | Nice: " + strconv.FormatUint(s.Nice, 10) + " | System: " + strconv.FormatUint(s.System, 10) + " | Idle: " + strconv.FormatUint(s.Idle, 10) + " | IOWait: " + strconv.FormatUint(s.IOWait, 10)
+	for _, s := range stat {
+		cpustatus = "VendorID: " + s.VendorID + " | Model: " + s.Model + " | ModelName: " + s.ModelName
 	}
 	return &CpuStatus{Cpustat: cpustatus}, nil
 }
@@ -52,7 +53,7 @@ func (s *Server) GetRamStats(ctx context.Context, in *RamStatus) (*RamStatus, er
 	}
 	var status string
 
-	status = "PagePagein: " + strconv.FormatUint(stat.PagePagein, 10) + " | PagePageout: " + strconv.FormatUint(stat.PagePageout, 10) + " | PageSwapin: " + strconv.FormatUint(stat.PageSwapin, 10) + " | PageSwapout: " + strconv.FormatUint(stat.PageSwapout, 10) + " | PageFree: " + strconv.FormatUint(stat.PageFree, 10)
+	status = "Total: " + strconv.FormatUint(stat.Total, 10) + " | Used: " + strconv.FormatUint(stat.Used, 10) + " | Free: " + strconv.FormatUint(stat.Free, 10)
 
 	return &RamStatus{Ramstat: status}, nil
 }
@@ -60,12 +61,14 @@ func (s *Server) GetRamStats(ctx context.Context, in *RamStatus) (*RamStatus, er
 // GetNetStats generates responce to a Ping request
 func (s *Server) GetNetStats(ctx context.Context, in *NetStatus) (*NetStatus, error) {
 	log.Printf("Recieve message NET %s", in.Netstat)
-	stat, err := net.IOCounters()
+	stat, err := net.IOCounters(false)
 	if err != nil {
 		log.Fatal("stat read fail")
 	}
 	var status string
 
-	status = "InMcastPkts: " + strconv.FormatUint(stat.InMcastPkts, 10) + " | OutMcastPkts: " + strconv.FormatUint(stat.OutMcastPkts, 10) + " | InOctets: " + strconv.FormatUint(stat.InOctets, 10) + " | OutOctets: " + strconv.FormatUint(stat.OutOctets, 10) + " | TCPTimeouts: " + strconv.FormatUint(stat.TCPTimeouts, 10)
+	for _, s := range stat {
+		status = "Name: " + s.Name + " | BytesSent: " + strconv.FormatUint(s.BytesSent, 10) + " | BytesRecv: " + strconv.FormatUint(s.BytesRecv, 10)
+	}
 	return &NetStatus{Netstat: status}, nil
 }
